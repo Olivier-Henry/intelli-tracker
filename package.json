@@ -19,6 +19,7 @@
   "scripts": {
     "postinstall": "npx electron-builder install-app-deps",
     "ng": "ng",
+    "lint": "ng lint",
     "start": "npm-run-all -p ng:serve electron:serve",
     "build": "npm run electron:tsc && ng build",
     "build:dev": "npm run build -- -c dev",
@@ -35,7 +36,7 @@
     "precommit": "npm run commitlint && npm run lint",
     "commitlint": "commitlint -e",
     "test:cover:unix": "rm -rf ./coverage && ng-test --no-watch --code-coverage",
-    "coveralls:unix": "cat ./coverage/lcov.info | .node_modules/coveralls/bin/coveralls.js"
+    "coveralls:unix": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {},
   "devDependencies": {
