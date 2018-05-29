@@ -38,9 +38,14 @@
     "test:cover:unix": "rm -rf ./coverage && ng test --no-watch --code-coverage",
     "coveralls:unix": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@angular/cdk": "^6.1.0",
+    "@angular/flex-layout": "^6.0.0-beta.15",
+    "@angular/material": "^6.1.0"
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.6.3",
+    "@angular/animations": "^6.0.3",
     "@angular/cli": "6.0.3",
     "@angular/common": "6.0.3",
     "@angular/compiler": "6.0.3",
