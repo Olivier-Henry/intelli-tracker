@@ -1,4 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron';
+import { createConnection, Connection } from "typeorm";
+import Config from './src/utils/Config';
 import "reflect-metadata";
 import * as path from 'path';
 import * as url from 'url';
@@ -7,7 +9,28 @@ let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
+async function connect() {
+  const connection: Connection = await createConnection({
+    "type": "sqlite",
+    "database": path.join(app.getPath('userData'), 'data.db'),
+    "synchronize": true,
+    "logging": "all",
+    "entities": [
+      __dirname + "/src/entity/*.js"
+    ],
+    "migrations": [
+      "migration/**/*.ts"
+    ],
+    "subscribers": [
+      "subscriber/**/*.ts"
+    ],
+  });
+}
+
 function createWindow() {
+  connect().then(result => {
+    const config = new Config();
+  });
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
