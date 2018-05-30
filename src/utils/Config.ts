@@ -1,7 +1,7 @@
-//import * as ini from 'ini';
+// import * as ini from 'ini';
 import * as os from 'os';
 import * as fs from 'fs';
-//import { app } from 'electron';
+// import { app } from 'electron';
 import * as path from 'path';
 import { getConnection } from 'typeorm';
 import Room from '../entity/Room';
@@ -13,7 +13,7 @@ export default class Config {
     os: string;
     version: number;
     rooms: { [k: string]: string } = {};
-    assistant: boolean = true;
+    assistant = true;
     // initPath: string;
 
     constructor() {
@@ -29,7 +29,7 @@ export default class Config {
         this.generateDefaultRoomPaths();
         // this.createIniFile();
         this.saveRoomsAndHeroes();
-        //}
+        // }
         this.getPreferences()
             .then(result => {
                 console.log('getPreferences', result);
@@ -51,13 +51,13 @@ export default class Config {
                     return result.firstInstall;
                 }
 
-                let prefs = new AppPreferences();
+                const prefs = new AppPreferences();
                 prefs.firstInstall = _this.assistant;
-                preferencesRepository.save(prefs).then(result => {
-                    //do nothing
+                preferencesRepository.save(prefs).then(savedPref => {
+                    // do nothing
                 }).catch(error => {
                     console.warn(error);
-                })
+                });
 
                 return prefs.firstInstall;
 
@@ -71,7 +71,8 @@ export default class Config {
             case 'win32':
                 if (this.version >= 7) {
                     this.rooms.winamax = os.homedir() + path.sep + 'Documents' + path.sep + 'Winamax Poker' + path.sep + 'accounts';
-                    this.rooms.pokerstars = os.homedir() + path.sep + 'AppData' + path.sep + 'Local' + path.sep + 'PokerStars.FR' + path.sep + 'HandHistory';
+                    this.rooms.pokerstars = os.homedir() + path.sep + 'AppData' + path.sep
+                        + 'Local' + path.sep + 'PokerStars.FR' + path.sep + 'HandHistory';
                 }
                 break;
             case 'darwin':
@@ -85,7 +86,7 @@ export default class Config {
     }
 
     private saveRoomsAndHeroes() {
-        for (let room in this.rooms) {
+        for (const room of Object.keys(this.rooms)) {
             this.saveRooms(room);
         }
     }
@@ -110,9 +111,8 @@ export default class Config {
 
                     r.name = room;
                     r.path = _this.rooms[room];
-                    roomRepository.save(r).then(result => {
-                        r = result;
-                        _this.saveHeroes(r);
+                    roomRepository.save(r).then(roomResult => {
+                        _this.saveHeroes(roomResult);
                     }).catch(error => {
                         console.error(error);
                     });
@@ -123,7 +123,7 @@ export default class Config {
 
 
             } else {
-                console.error("default path was not found for room: " + room);
+                console.error('default path was not found for room: ' + room);
             }
         });
     }
@@ -135,10 +135,10 @@ export default class Config {
         fs.readdir(room.path, (err, files) => {
             files.forEach(file => {
                 const filePath = room.path + path.sep + file;
-                fs.stat(filePath, (err, stats) => {
+                fs.stat(filePath, (error, stats) => {
                     if (stats.isDirectory()) {
 
-                        let user = new User();
+                        const user = new User();
                         user.name = file;
                         user.room = room;
                         user.isHero = true;
@@ -150,16 +150,16 @@ export default class Config {
                                 return;
                             }
 
-                            userRepository.save(user).then(result => {
-                                //do nothing
-                            }).catch(error => {
-                                console.warn(error);
-                            })
+                            userRepository.save(user).then(userId => {
+                                // do nothing
+                            }).catch(userError => {
+                                console.warn(userError);
+                            });
 
 
-                        }).catch(error => {
-                            console.warn(error);
-                        })
+                        }).catch(repositoryError => {
+                            console.warn(repositoryError);
+                        });
 
                     }
                 });
@@ -194,7 +194,7 @@ export default class Config {
 
     detectOsVersion() {
         this.os = os.platform();
-        this.version = parseInt(os.release().split(".")[0]);
+        this.version = parseInt(os.release().split('.')[0], 10);
     }
 }
 
