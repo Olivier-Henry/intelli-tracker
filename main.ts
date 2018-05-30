@@ -1,4 +1,5 @@
 import { app, BrowserWindow, screen } from 'electron';
+import "reflect-metadata";
 import * as path from 'path';
 import * as url from 'url';
 
