@@ -9,6 +9,7 @@ install:
   - choco install googlechrome
   # install modules
   - npm set progress=false
+  - npm install -g copyfiles
   - npm install
   - npm install -g @angular/cli@latest --silent
   - npm run rebuild
