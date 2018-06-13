@@ -1,0 +1,30 @@
+# Test against the latest version of this Node.js version
+environment:
+  nodejs_version: "8"
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  - choco install googlechrome
+  # install modules
+  - npm set progress=false
+  - npm install -g copyfiles
+  - npm install
+  - npm install -g @angular/cli@latest --silent
+  - npm run rebuild
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - ng lint
+  - npm run test
+  - npm run e2e
+  - npm run build
+
+
+# Don't actually build.
+build: off
