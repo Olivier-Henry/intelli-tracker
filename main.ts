@@ -11,6 +11,18 @@ function createWindow() {
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
+  if (serve) {
+    require('electron-reload')('.', {
+      electron: require(`${__dirname}/node_modules/electron`)});
+  }  
+   /* } else {
+     win.loadURL(url.format({
+       pathname: path.join(__dirname, 'dist/index.html'),
+       protocol: 'file:',
+       slashes: true
+     }));
+   } */
+
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
@@ -19,17 +31,13 @@ function createWindow() {
     height: size.height
   });
 
-  if (serve) {
-    require('electron-reload')(__dirname, {
-     electron: require(`${__dirname}/node_modules/electron`)});
-    win.loadURL('http://localhost:4200');
-  } else {
-    win.loadURL(url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
-  }
+  win.loadURL(url.format({
+    pathname: path.join(__dirname, 'dist/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
+
+  
 
   win.webContents.openDevTools();
 
